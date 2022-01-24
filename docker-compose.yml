@@ -1,0 +1,40 @@
+version: '3.8'
+services:
+  app:
+    container_name: net-app
+    build:
+      context: .
+      dockerfile: Dockerfile.develop
+    ports:
+      - 5000:5000
+      - 5001:5001
+    networks:
+      - net-net
+    depends_on:
+      - db
+    volumes:
+      - .:/src
+    command: dotnet watch run
+
+  db:
+    container_name: net-db
+    platform: linux/x86_64
+    image: mysql:5.7
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: mysql
+      MYSQL_USER: user
+      MYSQL_PASSWORD: secret
+    command: mysqld --character-set-server=utf8 --collation-server=utf8_unicode_ci
+    volumes:
+      - ./mysql/data:/var/lib/mysql
+      - ./mysql/init:/docker-entrypoint-initdb.d
+      - ./mysql/my.cnf:/etc/mysql/conf.d/my.cnf
+    networks:
+      - net-net
+
+networks:
+  net-net:
+    driver: bridge
