@@ -33,7 +33,7 @@ namespace apiMyApp.Controllers
       {
         return NotFound();
       }
-      //TODO:itemをitemDtoに変換するメソッドを作成する。
+      //TODO:itemをitemDtoに変換するメソッドを作成する
       return item;
     }
 
